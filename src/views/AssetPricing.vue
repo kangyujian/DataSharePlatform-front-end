@@ -48,7 +48,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.id">
+                        <tr v-for="(item,index) in items" :key="item.id">
                             <td v-text="item.id"></td>
                             <td v-text="item.datacheacker"></td>
                             <td v-text="item.datapricedecidetime.slice(0,10)"></td>
@@ -64,7 +64,7 @@
                                     off-color="#F04134"
                                     off-text="禁止"
                                     off-value="0"
-                                    @change="changeSwitch(item.isonline,item.id)"
+                                    @change="changeSwitch(item.isonline,item.id,index)"
                             >
                             </el-switch>
                             </td>
@@ -180,23 +180,6 @@ export default {
                     if(res.data.length===0){
                         this.items=[];
                     }else{
-
-                        // window.console.log(res.data);
-                        //get data
-                        // let ans=[];
-                        // for (let i=0;i<res.data.length;i++){
-                        //     let tmp=[];
-                        //     let item=res.data[i];
-                        //     tmp.push(item["id"]);
-                        //     tmp.push(item['datacheacker']);
-                        //     tmp.push(item['datapricedecidetime']);
-                        //     tmp.push(item['datasize']);
-                        //     tmp.push(item['datavalue']);
-                        //     tmp.push(item['isonline']);
-                        //     ans.push(tmp);
-                        //
-                        // }
-                        // this.items=ans;
 
                         this.items=res.data;
                         window.console.log(res.data);
@@ -320,10 +303,47 @@ export default {
                     return true
             }
         },
-        changeSwitch(flag,id){
-            window.console.log(flag);
-            flag=!flag;
-            window.console.log(this.items,id);
+        changeSwitch(flag,id,index){
+
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+
+            window.console.log(flag,id,index);
+            this.$axios
+                .get("api/assetPricing/update", {
+                    params: {
+                                     datacheacker: this.items[index].datacheacker,
+                                     datapricedecidetime: (new Date(this.items[index].datapricedecidetime)).Format('yyyy-MM-dd hh:mm:ss').toString(),
+                                     datasize: this.items[index].datasize,
+                                     datavalue: this.items[index].datavalue,
+                                     id: id,
+                                     isonline: flag
+
+                    },
+                })
+                .then(res => {
+
+                    if(res.data){
+                        window.console.log('Sucess!');
+                    }else{
+                        window.console.log('fail!');
+                    }
+                })
 
         }
     }

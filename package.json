@@ -12,6 +12,7 @@
     "axios": "^0.19.0",
     "core-js": "^3.4.3",
     "element-ui": "^2.13.2",
+    "jquery": "^3.5.1",
     "querystring": "^0.2.0",
     "roboto-fontface": "*",
     "vue": "^2.6.10",
@@ -42,19 +43,12 @@
     ],
     "rules": {
       "no-console": "off",
-
       "no-restricted-syntax": [
-
         "error",
-
         {
-
           "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]",
-
           "message": "Unexpected property on console object was called"
-
         }
-
       ]
     },
     "parserOptions": {

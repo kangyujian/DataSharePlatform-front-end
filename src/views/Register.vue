@@ -67,22 +67,26 @@
                 this.$refs[formName].resetFields();
             },
             submitForm(formName){
+                var that=this;
                 this.$refs[formName].validate((valid) => {
                     if(valid){ //验证通过
-                        api.userRegister(this.regForm)
-                            .then(({ data }) => {
-                                if(data.success){
-                                    this.$message({
-                                        type: 'success',
-                                        message: '注册成功'
-                                    });
+                        this.$axios
+                            .get("api/register/isRegisterSucess", {
+                                params: {
+                                    userName:that.regForm.username,
+                                    passWord:that.regForm.password
+
+                                },
+                            })
+                            .then(res => {
+                                window.console.log(res);
+                                if(res.data){
+                                    alert('注册成功!');
+
                                 }else{
-                                    this.$message({
-                                        type: 'info',
-                                        message: '用户名已经存在'
-                                    });
+                                    alert('注册失败!,可能用户名重复导致!');
                                 }
-                            });
+                            })
                     }else{ //验证不通过
                         // console.log('error submit');
                         return false;

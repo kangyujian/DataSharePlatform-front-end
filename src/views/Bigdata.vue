@@ -47,7 +47,7 @@
                     <tr v-for="item in  netcons" :key="item.id">
                         <td v-text="item.id"></td>
                         <td v-text="item.owner"></td>
-                        <td v-text="item.datastarttime"></td>
+                        <td v-text="item.datastarttime.slice(0,10)"></td>
                         <td v-text="item.datatheme"></td>
                         <td v-text="item.datasize"></td>
                         <td v-text="item.blockversion"></td>

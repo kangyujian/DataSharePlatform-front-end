@@ -52,10 +52,10 @@
                     </th>
                     </thead>
                     <tbody>
-                    <tr v-for="item in items" :key="item.id">
+                    <tr v-for="(item,index) in items" :key="item.id">
                         <td v-text="item.id"></td>
                         <td v-text="item.owner"></td>
-                        <td v-text="item.datastarttime"></td>
+                        <td v-text="item.datastarttime.slice(0,10)"></td>
                         <td v-text="item.datatheme"></td>
                         <td v-text="item.datasize"></td>
                         <td v-text="item.blockversion"></td>
@@ -70,6 +70,7 @@
                                     off-color="#F04134"
                                     off-text="禁止"
                                     off-value="0"
+                                    @change="changeSwitch(item.isonline,item.id,index)"
 
                             >
                             </el-switch>
@@ -331,6 +332,49 @@ export default {
                     return true
             }
         },
+        changeSwitch(flag,id,index){
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+
+            window.console.log(flag,id,index);
+            this.$axios
+                .get("api/assetStatus/update", {
+                    params: {
+                        blockversion: this.items[index].blockversion,
+                        datainbloackid: this.items[index]. datainbloackid,
+                        datasize: this.items[index].datasize,
+                        datastarttime: (new Date(this.items[index].datastarttime)).Format('yyyy-MM-dd hh:mm:ss').toString(),
+                        datatheme: this.items[index].datatheme,
+                        id: id,
+                        isonline: flag,
+                        owner: this.items[index].owner
+                    },
+                })
+                .then(res => {
+
+                    if(res.data){
+                        window.console.log('Sucess!');
+                    }else{
+                        window.console.log('fail!');
+                    }
+                })
+
+        }
     }
 };
 </script>

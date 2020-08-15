@@ -8,6 +8,7 @@ import App from './App.vue';
 import axios from './axios';
 import vuetify from './plugins/vuetify';
 import router from './router';
+import $ from './jquery';
 
 Vue.use(ElementUI);
 
@@ -15,10 +16,12 @@ Vue.config.productionTip = false
 //set axios form-data
 Vue.prototype.$qs = querystring;
 Vue.prototype.$axios = axios
+Vue.prototype.$=$
 
 new Vue({
   vuetify,
   router,
   axios,
-  render: h => h(App)
+  render: h => h(App),
+  $
 }).$mount('#app')

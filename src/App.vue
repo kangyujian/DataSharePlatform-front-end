@@ -177,13 +177,25 @@
         }),
         methods:{
             doLogin(){//一点击登录按钮，这个方法就会执行
-                if(this.user.username==="admin"&&this.user.password==="123"){
-                    alert('登录成功!');
-                    window.location.href="http://localhost:8080/#/AssetStatus";
-                    this. isLoginSucess=true;
-                }else{
-                    alert('账号或者密码不正确!');
-                }
+
+                this.$axios
+                    .get("api/login/isloginSucess", {
+                        params: {
+                            userName:this.user.username,
+                            passWord:this.user.password
+
+                        },
+                    })
+                    .then(res => {
+                        window.console.log(res);
+                        if(res.data){
+                            alert('登录成功!');
+                            window.location.href="http://localhost:8080/#/AssetStatus";
+                            this.isLoginSucess=true;
+                        }else{
+                            alert('账号或者密码不正确!');
+                        }
+                    })
             },
             goRegister(){
                 this.isRegister=true;
